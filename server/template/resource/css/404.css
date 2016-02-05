@@ -1,0 +1,47 @@
+html body {
+    height: 100%;
+    width: 100%;
+}
+
+.main {
+    height: 500px;
+    width: 360px;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.main span {
+    display: inline-block;
+    padding: 15px 0;
+}
+
+.main .title {
+    font-size: 80px;
+    font-family: "Arial", sans-serif;
+    color: #979797
+}
+
+.main .content {
+    font-size: 22px;
+    font-family: "Helvetica Neue", Helvetica, "WenQuanYi Micro Hei", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    color: #979797;
+}
+
+.main .link {
+    margin-top: 40px;
+    font-size: 30px;
+    color: #5BA4E5;
+}
+
+.main a {
+    color: #5BA4E5;
+}
+
+.main a:hover {
+    color: orange;
+}
+
+.main a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+}

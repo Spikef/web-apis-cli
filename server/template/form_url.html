@@ -1,0 +1,48 @@
+<!--
+    URL地址表单
+-->
+
+<div class="panel panel-primary">
+    <div class="panel-heading">请求地址</div>
+    <div class="panel-body">
+        <form class="form-inline url">
+            <fieldset>
+                <div class="areaLeft">
+                    <div class="left">
+                        <select class="form-control" id="post-method">
+                            <%
+                            methods.forEach(function(method) {
+                                var selected = (api && api.method === method) ? ' selected' : '';
+                            %>
+                            <option value="<%=method%>"<%=selected%>><%=method%></option>
+                            <%
+                            });
+                            %>
+                        </select>
+                    </div>
+                    <div class="right">
+                        <%
+                        var _post_url = (api && api.url) ? api.url : '';
+                        %>
+                        <input type="text" class="form-control url-input" id="post-url" placeholder="http://" value="<%=_post_url%>">
+                    </div>
+                </div>
+
+                <div class="areaRight">
+                    <div class="left">
+                        <span class="btn btn-success" id="sendRequest">发送请求</span>
+                    </div>
+                    <div class="right">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="check-bodies" checked> 请求Body参数
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="check-header" checked> 自定义Header
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

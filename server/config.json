@@ -1,0 +1,8 @@
+{
+    "app": {
+        "name": "EXCMS",
+        "title": "EXCMS",
+        "engine": "WebAPIs",
+        "port": 8831
+    }
+}
