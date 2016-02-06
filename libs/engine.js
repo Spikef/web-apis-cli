@@ -27,5 +27,5 @@ exports.api = function(alias) {
 };
 
 exports.list = function() {
-    return require(path.resolve(site, 'APIs.json'));
+    return require(path.resolve(site, 'config.json')).api;
 };

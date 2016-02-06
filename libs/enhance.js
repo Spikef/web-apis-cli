@@ -135,8 +135,8 @@ if (!Date.parse) {
 }
 
 require('colors');
-process.site = function(value) {
-    if ( process._site && !value ) return process._site;
+process.site = function() {
+    if ( process._site ) return process._site;
 
     var fs = require('fs');
     var path = require('path');
@@ -153,7 +153,11 @@ process.site = function(value) {
         process.exit(1);
     }
 
-    this.engine = configs.app.engine;
+    var version = require('../package.json').version;
+    if ( !configs.app.version || version !== configs.app.version ) {
+        console.log('不受支持的版本, 请先使用[wa update]命令升级。'.yellow);
+        process.exit(1);
+    }
 
     process._site = process.cwd();
     return process._site;

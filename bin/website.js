@@ -34,13 +34,15 @@ program
 
         try{
             fm.copyFolderSync(source, target);
+            fs.mkdirSync(path.resolve(target, 'APIs'));
 
             var cfg = require(config);
             cfg.app = {
                 name: name,
                 port: port,
                 title: title,
-                engine: 'WebAPIs'
+                engine: 'WebAPIs',
+                version: require('../package.json').version
             };
 
             fs.writeFileSync(config, JSON.format(cfg), 'utf8');
@@ -49,6 +51,27 @@ program
         } catch(e) {
             fm.removeFolderSync(target);
             console.log('创建网站出错,系统将自动回滚删除文件.'.red);
+        }
+    });
+
+program
+    .command('update')
+    .action(function() {
+        var source = path.resolve(__dirname, '../server');
+        var target = process.cwd();
+        var config = path.resolve(target, 'config.json');
+
+        try{
+            var cfg = require(config);
+            cfg.app.version = require('../package.json').version;
+
+            fm.copyFolderSync(source, target);
+
+            fs.writeFileSync(config, JSON.format(cfg), 'utf8');
+
+            console.log('成功升级网站接口服务,请使用 wa start 命令开启访问。'.green);
+        } catch(e) {
+            console.log('升级出错: ' + e.message + '.');
         }
     });
 

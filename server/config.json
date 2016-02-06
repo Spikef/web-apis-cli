@@ -1,8 +1,17 @@
 {
     "app": {
-        "name": "EXCMS",
-        "title": "EXCMS",
+        "name": "WordEach",
+        "port": 8831,
+        "title": "WordEach",
         "engine": "WebAPIs",
-        "port": 8831
+        "version": "1.0.1"
+    },
+    "api": {},
+    "admin": {
+        "admin": {
+            "username": "admin",
+            "password": "2c7c5f3675a1f557b24fe89c1be522e6c34dc1a9",
+            "randSeed": ""
+        }
     }
 }
