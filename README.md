@@ -1,6 +1,8 @@
 # Web APIs
 
-A simple web apis test framework based on html.
+基于node/express的API测试框架.
+
+A simple web api test framework based on node/express.
 
 ## Install
 

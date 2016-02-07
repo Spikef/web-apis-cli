@@ -124,3 +124,11 @@
     color: #555;
     border: none;
 }
+
+/*底部样式*/
+.footer-center {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    color: #767676;
+    text-align: center;
+}

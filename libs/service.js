@@ -50,6 +50,9 @@ exports.addApi = function(req) {
         return result;
     }
 
+    var admin = require('./admin');
+
+
     var file = path.resolve(site, 'config.json');
     var save = path.resolve(site, 'APIs/' + alias + '.json');
     var list = require(file);
@@ -127,4 +130,8 @@ exports.modifyApi = function(req) {
 function isURL(url){
     var re = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
     return re.test(url);
+}
+
+function parseHeader(req) {
+    console.log(req.headers)
 }
