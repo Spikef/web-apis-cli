@@ -4,13 +4,14 @@
  * Copyright: Envirs Team < http://envirs.com >
  */
 
-require('../libs/enhance.js');
+require('../libs/enhance');
 require('colors');
 
 var fs = require('fs');
 var fm = require('../libs/fs-more');
 var path = require('path');
 var program = require('commander');
+var encrypt = require('../libs/encrypt');
 
 program
     .command('init <name> [title] [port]')
@@ -42,7 +43,8 @@ program
                 port: port,
                 title: title,
                 engine: 'WebAPIs',
-                version: require('../package.json').version
+                version: require('../package.json').version,
+                seed: encrypt.randomChar(8)
             };
 
             fs.writeFileSync(config, JSON.format(cfg), 'utf8');

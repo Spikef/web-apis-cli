@@ -4,14 +4,18 @@
         "port": 8831,
         "title": "WordEach",
         "engine": "WebAPIs",
-        "version": "1.0.1"
+        "version": "1.0.2",
+        "seed": "123456"
     },
-    "api": {},
+    "api": {
+        
+    },
     "admin": {
         "admin": {
             "username": "admin",
-            "password": "2c7c5f3675a1f557b24fe89c1be522e6c34dc1a9",
-            "randSeed": ""
+            "password": "806cbb97e6103f1f4da1737ed4cb307a39648c67",
+            "randSeed": "6e91bf16da0bec2a47c997703c6ee38de02eb268",
+            "userRank": 1
         }
     }
 }

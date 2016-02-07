@@ -37,3 +37,21 @@ port: 同上
 `wa title <title>`
 
 title: 同上
+
+### 操作管理员
+
+`wa admin <action> [username] [password] [userRank]`
+
+action: add(添加管理员)、modify(修改管理员)、remove(删除管理员)、login(检验登录)、check(检验UserKey和UserToken)
+
+username: 用户名或者UserKey
+
+password: 密码或者UserToken
+
+userRank: 用户等级
+
+    1 顶级管理员(可以添加、删除或者修改任意管理员)
+
+    2 超级管理员(可以添加、删除或者修改3级管理员和进行所有的接口操作)
+
+    3 普通管理员(可以添加或者修改接口操作)

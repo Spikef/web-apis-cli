@@ -115,6 +115,13 @@ if (!String.prototype.contains) {
     String.prototype.contains = String.prototype.includes;
 }
 
+if (!String.isStringLike) {
+    String.isStringLike = function(input) {
+        var type = typeof input;
+        return ['string', 'number', 'boolean'].includes(type);
+    }
+}
+
 if (!Date.prototype.format) {
     Date.prototype.format = function(format) {
         var fecha = require('fecha');

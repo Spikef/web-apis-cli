@@ -12,12 +12,14 @@ var templates = {
     index: 'index.html',
     api: 'api.html',
     api_add: 'api_add.html',
+    api_modify: 'api_add.html',
     404: '404.html'
 };
 var routers = {
     index: 'index',
     api: 'api',
     api_add: 'api_add',
+    api_modify: 'api_modify',
     404: '404'
 };
 
@@ -28,7 +30,7 @@ var render = function(params, options) {
     params.template = params.template || templates[params.router];
     if ( !params.template ) return '';
     var template = fs.readFileSync(site + '/template/' + params.template, 'utf8');
-    var engine = require('./engine.js');
+    var engine = require('./engine');
     var data = {
         routers: routers,
         methods: engine.methods,
@@ -40,6 +42,7 @@ var render = function(params, options) {
 
     switch (params.router) {
         case routers.api:
+        case routers.api_modify:
             data.api = engine.api(params.alias);
             if ( !data.api ) return '';
             break;

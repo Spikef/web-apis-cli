@@ -4,7 +4,7 @@
  * Copyright: Envirs Team < http://envirs.com >
  */
 
-require('../libs/enhance.js');
+require('../libs/enhance');
 require('colors');
 
 var fs = require('fs');
@@ -12,10 +12,10 @@ var path = require('path');
 var program = require('commander');
 
 program
-    .command('port <port>')
+    .command('port [port]')
     .action(function(port) {
         if ( !/^\d{4,}$/.test(port) ) {
-            console.log('端口号只能为数字!'.red);
+            console.log('端口号只能为4位以上的数字!'.red);
             return;
         }
 

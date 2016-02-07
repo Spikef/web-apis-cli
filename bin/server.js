@@ -4,7 +4,7 @@
  * Copyright: Envirs Team < http://envirs.com >
  */
 
-require('../libs/enhance.js');
+require('../libs/enhance');
 require('colors');
 
 var path = require('path');
