@@ -44,10 +44,26 @@
                     </ul>
                     <%}%>
                 </li>
-                <%if (nav===routers.api_add) {%>
+                <%
+                if (admin) {
+                    if (nav===routers.api_add) {
+                %>
                 <li class="active"><a href="/api_add">添加接口</a></li>
-                <%}else{%>
+                <%  }else{%>
                 <li><a href="/api_add">添加接口</a></li>
+                <%
+                    }
+                }
+                %>
+                <%if (admin) {%>
+                <li><a href="/api_modify">编辑接口</a></li>
+                <li><a href="/api_list">编辑菜单</a></li>
+                <%}%>
+                <%if (admin && admin.rank<=2) {%>
+                <li><a href="/admin_modify">编辑管理员</a></li>
+                <%}%>
+                <%if (!admin) {%>
+                <li><a href="#" data-toggle="modal" data-target="#dialog-login">登录</a></li>
                 <%}%>
             </ul>
         </div><!-- /.navbar-collapse -->

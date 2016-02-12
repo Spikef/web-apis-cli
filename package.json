@@ -20,6 +20,7 @@
     "body-parser": "^1.14.2",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
+    "cookie-parser": "^1.4.1",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "fecha": "^1.2.2",

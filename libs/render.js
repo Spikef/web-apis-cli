@@ -13,6 +13,8 @@ var templates = {
     api: 'api.html',
     api_add: 'api_add.html',
     api_modify: 'api_add.html',
+    api_list: 'api_list.html',
+    admin_list: 'admin_list.html',
     404: '404.html'
 };
 var routers = {
@@ -20,6 +22,8 @@ var routers = {
     api: 'api',
     api_add: 'api_add',
     api_modify: 'api_modify',
+    api_list: 'api_list',
+    admin_list: 'admin_list',
     404: '404'
 };
 
@@ -39,6 +43,20 @@ var render = function(params, options) {
         app: engine.app(),
         list: engine.list()
     };
+
+    var admin = require('./admin');
+    var check = admin.checkAdmin(params.userKey, params.userToken);
+    data.admin = check.success ? check.admin : false;
+
+    var permission = [
+        routers.api_list,
+        routers.api_add,
+        routers.api_modify,
+        routers.admin_list
+    ];
+    if ( permission.contains(params.router) && !admin ) {
+        return '';
+    }
 
     switch (params.router) {
         case routers.api:

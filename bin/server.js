@@ -23,22 +23,29 @@ program
         var app = express();
 
         var bodyParser = require('body-parser');
+        var cookieParser = require('cookie-parser');
 
         app.use(bodyParser.json());                         // for parsing application/json
         app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+        app.use(cookieParser());                            // for parsing cookies
 
         app.use('/resource/', express.static(site + '/template/resource'));
 
         app.get(/^\/(index|index\.html)?$/i, function(req, res) {
             var html = render({
-                router: render.routers.index
+                router: render.routers.index,
+                userKey: req.cookies.userKey,
+                userToken: req.cookies.userToken
             });
             sendHtml(res, html);
         });
 
         app.get(/^\/(api_add|api_add\.html)?$/i, function(req, res) {
             var html = render({
-                router: render.routers.api_add
+                router: render.routers.api_add,
+                userKey: req.cookies.userKey,
+                userToken: req.cookies.userToken
             });
             sendHtml(res, html);
         });
@@ -47,7 +54,18 @@ program
             var html = render({
                 second: true,
                 router: render.routers.api,
-                alias: req.params[1]
+                alias: req.params[1],
+                userKey: req.cookies.userKey,
+                userToken: req.cookies.userToken
+            });
+            sendHtml(res, html);
+        });
+
+        app.get(/^\/(api_list|api_list\.html)?$/i, function(req, res) {
+            var html = render({
+                router: render.routers.api_list,
+                userKey: req.cookies.userKey,
+                userToken: req.cookies.userToken
             });
             sendHtml(res, html);
         });
@@ -68,7 +86,7 @@ program
                 var fn = service[action];
 
                 if ( fn ) {
-                    result = fn.call(service, req);
+                    result = fn.call(service, req, res);
 
                     if ( result.success ) {
                         if ( action === 'sendRequest' ) {

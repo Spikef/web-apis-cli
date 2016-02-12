@@ -163,6 +163,9 @@
                     type:'POST',
                     cache:false,
                     dataType:'json',
+                    beforeSend: function(req) {
+                        req.setRequestHeader('USER-KEY', Cookies.get('userKey'));
+                    },
                     complete: function(xhr, statusText) {
                         var data = xhr.responseJSON;
 
@@ -176,6 +179,50 @@
                     }
                 });
             });
+        },
+        onLogin: function() {
+            var self = this;
+
+            $('#admin-login').on('click', function(){
+                if ( self.logining ) return;
+
+                self.switchLoginButton('close');
+
+                var username = $('#login-username').val();
+                var password = $('#login-password').val();
+                $.ajax( {
+                    url:'/service/login',
+                    data:{
+                        username: username,
+                        password: password
+                    },
+                    type:'POST',
+                    cache:false,
+                    dataType:'json',
+                    complete: function(xhr, statusText) {
+                        var data = xhr.responseJSON;
+
+                        if ( statusText === 'success' ) {
+                            $('#dialog-login').modal('hide');
+                            alert.success(data.message, '登录成功');
+                        } else {
+                            $('#dialog-login .alert').show();
+                            $('#dialog-login .alert p').text('登录失败: ' + data.message);
+
+                            setTimeout(function() {
+                                $('#dialog-login .alert').hide();
+                            }, 3000);
+                        }
+
+                        self.switchLoginButton('open');
+                    }
+                });
+            });
+        },
+        onLoginShow: function() {
+            $('#dialog-login').on('show.bs.modal', function (e) {
+                $('#dialog-login .alert').hide();
+            })
         },
 
         // 解析参数
@@ -354,6 +401,29 @@
                 $('.add fieldset').removeAttr('disabled');
             }
         },
+        switchLoginButton(close) {
+            if ( close && close !== 'open' ) {
+                var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
+                $('#admin-login').append(spinner);
+
+                this.logining = true;
+
+                $('#login-username').attr('disabled', true);
+                $('#login-password').attr('disabled', true);
+                $('#admin-login').attr('disabled', true);
+                $('#admin-login-cancel').attr('disabled', true);
+            } else {
+                $('#admin-login').find('i:first').remove();
+
+                this.logining = false;
+
+                $('#login-username').removeAttr('disabled');
+                $('#login-password').removeAttr('disabled');
+                $('#admin-login').removeAttr('disabled');
+                $('#admin-login-cancel').removeAttr('disabled');
+            }
+        },
+
         // 初始化
         init: function() {
             this.initialStatus();
@@ -361,6 +431,8 @@
             this.onChangeParams();
             this.onSubmitRequest();
             this.onAddNewApi();
+            this.onLogin();
+            this.onLoginShow();
         }
     };
 

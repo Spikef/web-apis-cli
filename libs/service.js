@@ -51,7 +51,11 @@ exports.addApi = function(req) {
     }
 
     var admin = require('./admin');
-
+    var check = admin.checkAdmin(req.headers["user-key"], req.cookies.userToken);
+    if ( !check.success ) {
+        result.message = '没有完成操作所需要的权限!';
+        return result;
+    }
 
     var file = path.resolve(site, 'config.json');
     var save = path.resolve(site, 'APIs/' + alias + '.json');
@@ -127,11 +131,23 @@ exports.modifyApi = function(req) {
     }
 };
 
+exports.login = function(req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+
+    var admin = require('./admin');
+    var result = admin.login(username, password);
+
+    if ( result.success ) {
+        var expire = new Date(Date.now() + 1000 * 60 * 60 * 24 * 180);
+        res.cookie('userKey', result.admin.userKey, { expires: expire, httpOnly: false });
+        res.cookie('userToken', result.admin.userToken, { expires: expire, httpOnly: true });
+    }
+
+    return result;
+};
+
 function isURL(url){
     var re = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
     return re.test(url);
-}
-
-function parseHeader(req) {
-    console.log(req.headers)
 }

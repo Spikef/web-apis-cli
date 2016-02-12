@@ -130,7 +130,7 @@ exports.login = function(username, password) {
             }
         }
     } else {
-        result.message = '登录失败, 密码错误!';
+        result.message = '密码错误!';
         return result;
     }
 };
@@ -153,7 +153,13 @@ exports.checkAdmin = function(key, token) {
         if ( userKey === key && userToken === token ) {
             return {
                 success: true,
-                message: '授权成功!'
+                message: '授权成功!',
+                admin: {
+                    name: admin.username,
+                    rank: admin.userRank,
+                    userKey: userKey,
+                    userToken: userToken
+                }
             }
         }
     }

@@ -132,3 +132,36 @@
     color: #767676;
     text-align: center;
 }
+
+.footer-center ul{
+    display: block;
+    list-style-type: none;
+}
+
+.footer-center ul li{
+    display: inline;
+    padding: 0 2px;
+}
+
+/*登录框信息*/
+#dialog-login .alert {
+    margin-bottom: -10px;
+}
+
+/*列表*/
+.large-list {
+    padding-left: 0;
+    margin: 0;
+}
+.large-list-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    cursor: move;
+}
+.large-list-item:last-child {
+    margin-bottom: 0;
+}

@@ -1,0 +1,7 @@
+{
+    "alias": "a",
+    "url": "http://www.baidu.com/?q=100",
+    "method": "GET",
+    "header": [],
+    "bodies": []
+}
