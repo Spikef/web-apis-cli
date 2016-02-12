@@ -8,13 +8,16 @@
         "seed": "123456"
     },
     "api": {
-        "a": "a"
+        "a": "测试",
+        "b": "b",
+        "seperator_1": "---",
+        "c": "c"
     },
     "admin": {
         "admin": {
             "username": "admin",
-            "password": "945e7ba781c757dc508b0fb6073c477e9e25940a",
-            "randSeed": "5547741d996b621e2bc6a2e853e499f4516c1349",
+            "password": "dce212e2f684ddebd965511d84f229acf676e2ed",
+            "randSeed": "7a0974f1b742e543e794a4d6acc62a8c3e10252c",
             "userRank": 1
         }
     }

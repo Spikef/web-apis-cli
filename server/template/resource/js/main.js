@@ -180,6 +180,95 @@
                 });
             });
         },
+        onModifyApi: function() {
+            var self = this;
+
+            $('#modifyApi').on('click', function(){
+                if ( self.modifyingApi ) return;
+
+                self.switchModifyButton('close');
+
+                var post = self.packPostData();
+                var name = $('#api-name').val();
+                var alias = $('#api-alias').text();
+                $.ajax( {
+                    url:'/service/modifyApi',
+                    data:{
+                        name: name,
+                        alias: alias,
+                        url: post.url,
+                        method: post.method,
+                        header: post.header,
+                        bodies: post.bodies
+                    },
+                    type:'POST',
+                    cache:false,
+                    dataType:'json',
+                    beforeSend: function(req) {
+                        req.setRequestHeader('USER-KEY', Cookies.get('userKey'));
+                    },
+                    complete: function(xhr, statusText) {
+                        var data = xhr.responseJSON;
+
+                        if ( statusText === 'success' ) {
+                            alert.success(data.message, '修改成功');
+                        } else {
+                            alert.error(data.message, '修改失败');
+                        }
+
+                        self.switchModifyButton('open');
+                    }
+                });
+            });
+        },
+        onSaveList: function() {
+            var self = this;
+
+            $('.btn-save-list').on('click', function(){
+                if ( self.savingApi ) return;
+
+                self.switchSaveButton('close');
+
+                var api_list = {};
+
+                var count = 1;
+                $('#api-list').find('li').each(function(){
+                    var name = $(this).attr('api-name');
+                    var alias = $(this).attr('api-alias');
+
+                    if ( /^\-{3,}$/.test(name) ) {
+                        api_list['seperator_' + count] = '---';
+                        count++;
+                    } else {
+                        api_list[alias] = name;
+                    }
+                });
+
+                $.ajax( {
+                    url:'/service/saveApiList',
+                    data:{
+                        api_list:api_list
+                    },
+                    type:'POST',
+                    cache:false,
+                    dataType:'json',
+                    beforeSend: function(req) {
+                        req.setRequestHeader('USER-KEY', Cookies.get('userKey'));
+                    },
+                    complete: function(xhr, statusText) {
+                        var data = xhr.responseJSON;
+
+                        if ( statusText === 'success' ) {
+                            alert.success(data.message, '修改成功');
+                        } else {
+                            alert.error(data.message, '修改失败');
+                        }
+
+                        self.switchSaveButton('open');
+                    }
+                });
+            });
+        },
         onLogin: function() {
             var self = this;
 
@@ -222,7 +311,13 @@
         onLoginShow: function() {
             $('#dialog-login').on('show.bs.modal', function (e) {
                 $('#dialog-login .alert').hide();
-            })
+            });
+        },
+        onLogout: function() {
+            $('#logout').on('click', function() {
+                Cookies.remove('userKey');
+                Cookies.remove('userToken');
+            });
         },
 
         // 解析参数
@@ -401,6 +496,38 @@
                 $('.add fieldset').removeAttr('disabled');
             }
         },
+        switchModifyButton(close) {
+            if ( close && close !== 'open' ) {
+                var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
+                $('#modifyApi').append(spinner);
+
+                this.modifyingApi = true;
+
+                $('.add fieldset').attr('disabled', true);
+            } else {
+                $('#modifyApi').find('i:first').remove();
+
+                this.modifyingApi = false;
+
+                $('.add fieldset').removeAttr('disabled');
+            }
+        },
+        switchSaveButton(close) {
+            if ( close && close !== 'open' ) {
+                var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
+                $('.btn-save-list').append(spinner);
+
+                this.savingApi = true;
+
+                $('.btn-add-line').attr('disabled', true);
+            } else {
+                $('.btn-save-list').find('i:last').remove();
+
+                this.savingApi = false;
+
+                $('.btn-add-line').removeAttr('disabled');
+            }
+        },
         switchLoginButton(close) {
             if ( close && close !== 'open' ) {
                 var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
@@ -431,8 +558,11 @@
             this.onChangeParams();
             this.onSubmitRequest();
             this.onAddNewApi();
+            this.onModifyApi();
+            this.onSaveList();
             this.onLogin();
             this.onLoginShow();
+            this.onLogout();
         }
     };
 

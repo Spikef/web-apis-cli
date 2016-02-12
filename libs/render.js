@@ -54,7 +54,7 @@ var render = function(params, options) {
         routers.api_modify,
         routers.admin_list
     ];
-    if ( permission.contains(params.router) && !admin ) {
+    if ( permission.contains(params.router) && !data.admin ) {
         return '';
     }
 

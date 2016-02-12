@@ -165,3 +165,6 @@
 .large-list-item:last-child {
     margin-bottom: 0;
 }
+.large-list-item .close {
+    margin-left: 10px;
+}

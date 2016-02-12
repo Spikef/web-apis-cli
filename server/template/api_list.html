@@ -31,18 +31,21 @@
                     api_alias_list.forEach(function(alias){
                     if (/^\-{3,}$/.test(list[alias])) {
                     %>
-                    <li class="large-list-item">
+                    <li class="large-list-item" api-name="---">
                         <span class="close remove" aria-label="Remove">
                             <i class="fa fa-times"></i>
                         </span>
                         ---
                     </li>
                     <%  }else{  %>
-                    <li class="large-list-item">
+                    <li class="large-list-item" api-name="<%=list[alias]%>" api-alias="<%=alias%>">
+                        <a href="#" class="close remove" aria-label="Remove" title="删除">
+                            <i class="fa fa-times"></i>
+                        </a>
                         <a href="/api_modify/<%=alias%>" class="close" aria-label="Edit" title="编辑">
                             <i class="fa fa-external-link-square"></i>
                         </a>
-                        <%=alias%>
+                        <%=list[alias]%>
                     </li>
                     <%
                     }
@@ -61,14 +64,18 @@
                     </span>
             </div>
         </div>
+
+        <% include alert.html %>
     </div>
 
     <% include footer.html %>
 
     <script src="./resource/js/jquery.min.js" type="text/javascript"></script>
+    <script src="./resource/js/js.cookie.js" type="text/javascript"></script>
     <script src="./resource/js/Sortable.min.js" type="text/javascript"></script>
     <script src="./resource/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="./resource/js/bootstrap.ext.js" type="text/javascript"></script>
+    <script src="./resource/js/alert.js" type="text/javascript"></script>
     <script src="./resource/js/main.js" type="text/javascript"></script>
     <script src="./resource/js/api_list.js" type="text/javascript"></script>
 </body>

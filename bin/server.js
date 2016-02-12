@@ -50,6 +50,17 @@ program
             sendHtml(res, html);
         });
 
+        app.get(/^\/api_modify(\/([\w\-\.\(\)]+))?(\.html)?$/i, function(req, res) {
+            var html = render({
+                second: true,
+                router: render.routers.api_modify,
+                alias: req.params[1],
+                userKey: req.cookies.userKey,
+                userToken: req.cookies.userToken
+            });
+            sendHtml(res, html);
+        });
+
         app.get(/^\/api(\/([\w\-\.\(\)]+))?(\.html)?$/i, function(req, res) {
             var html = render({
                 second: true,

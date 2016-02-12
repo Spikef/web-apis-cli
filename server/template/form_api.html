@@ -1,7 +1,11 @@
 <!--
     新增接口
 -->
-
+<%
+var _api_name = api && api.name ? api.name : '';
+var _api_alias = api && api.alias ? api.alias : '';
+var _api_add = api && api.alias ? false : true;
+%>
 <div class="panel panel-info">
     <div class="panel-heading">新增接口</div>
     <div class="panel-body">
@@ -13,7 +17,7 @@
                             <label for="api-name">名称</label>
                         </div>
                         <div class="right">
-                            <input type="text" class="form-control" id="api-name" placeholder="用于显示的名称">
+                            <input type="text" class="form-control" id="api-name" placeholder="用于显示的名称" value="<%=_api_name%>">
                         </div>
                     </div>
 
@@ -22,12 +26,20 @@
                             <label for="api-alias">别名</label>
                         </div>
                         <div class="right">
+                            <%if ( _api_add ) {%>
                             <input type="text" class="form-control" id="api-alias" placeholder="用于URL地址的别名">
+                            <%}else{%>
+                            <span class="form-control" id="api-alias" value="<%=_api_alias%>" readonly><%=_api_alias%></span>
+                            <%}%>
                         </div>
                     </div>
 
                     <div class="col-sm-2 col-xs-12">
+                        <%if ( _api_add ) {%>
                         <span class="btn btn-success" id="addNewApi">添加接口</span>
+                        <%}else{%>
+                        <span class="btn btn-success" id="modifyApi">修改接口</span>
+                        <%}%>
                     </div>
                 </div>
             </fieldset>

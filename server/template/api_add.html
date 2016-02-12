@@ -35,22 +35,30 @@
                 </thead>
 
                 <tbody>
-                <!--<tr class="body-parametric">-->
-                    <!--<td>-->
-                        <!--<input type="text" class="form-control input-body-key">-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<input type="text" class="form-control input-body-value">-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<input type="text" class="form-control input-body-note">-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<span class="btn btn-xs btn-danger btn-remove-body">-->
-                            <!--<i class="fa fa-remove"></i> 删除参数-->
-                        <!--</span>-->
-                    <!--</td>-->
-                <!--</tr>-->
+                <%
+                if (api && api.bodies && api.bodies.length) {
+                    api.bodies.forEach(function(item){
+                %>
+                <tr class="body-parametric">
+                    <td>
+                        <input type="text" class="form-control input-body-key" value="<%=item.key%>">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control input-body-value" value="<%=item.value%>">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control input-body-note" value="<%=item.note%>">
+                    </td>
+                    <td>
+                        <span class="btn btn-xs btn-danger btn-remove-body">
+                            <i class="fa fa-remove"></i> 删除参数
+                        </span>
+                    </td>
+                </tr>
+                <%
+                    });
+                }
+                %>
                 </tbody>
             </table>
 
@@ -77,22 +85,30 @@
                 </thead>
 
                 <tbody>
-                <!--<tr class="head-parametric">-->
-                    <!--<td>-->
-                        <!--<input type="text" class="form-control input-head-key">-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<input type="text" class="form-control input-head-value">-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<input type="text" class="form-control input-head-note">-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<span class="btn btn-xs btn-danger btn-remove-head">-->
-                            <!--<i class="fa fa-remove"></i> 删除参数-->
-                        <!--</span>-->
-                    <!--</td>-->
-                <!--</tr>-->
+                <%
+                if (api && api.header && api.header.length) {
+                    api.header.forEach(function(item){
+                %>
+                <tr class="head-parametric">
+                    <td>
+                        <input type="text" class="form-control input-head-key" value="<%=item.key%>">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control input-head-value" value="<%=item.value%>">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control input-head-note" value="<%=item.note%>">
+                    </td>
+                    <td>
+                        <span class="btn btn-xs btn-danger btn-remove-head">
+                            <i class="fa fa-remove"></i> 删除参数
+                        </span>
+                    </td>
+                </tr>
+                <%
+                    });
+                }
+                %>
                 </tbody>
             </table>
 

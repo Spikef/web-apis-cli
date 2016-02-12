@@ -2,6 +2,38 @@
     "alias": "a",
     "url": "http://www.baidu.com/?q=100",
     "method": "GET",
-    "header": [],
-    "bodies": []
+    "header": [
+        {
+            "key": "hh1",
+            "value": "hhv1",
+            "note": "hhs1"
+        },
+        {
+            "key": "hh2",
+            "value": "hhv2",
+            "note": "hhs2"
+        },
+        {
+            "key": "hh3",
+            "value": "hhv3",
+            "note": "hhs3"
+        }
+    ],
+    "bodies": [
+        {
+            "key": "aa",
+            "value": "aav",
+            "note": "aas"
+        },
+        {
+            "key": "bb",
+            "value": "bbv",
+            "note": "bbs"
+        },
+        {
+            "key": "cc",
+            "value": "ccv",
+            "note": "ccs"
+        }
+    ]
 }

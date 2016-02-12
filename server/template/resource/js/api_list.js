@@ -6,7 +6,7 @@ $(document).ready(function(){
     // 添加分割符
     $('.btn-add-line').on('click', function (e) {
         var html = [
-            '                    <li class="large-list-item">',
+            '                    <li class="large-list-item" api-name="---">',
             '                        <span class="close remove" aria-label="Remove">',
             '                            <i class="fa fa-times"></i>',
             '                        </span>',

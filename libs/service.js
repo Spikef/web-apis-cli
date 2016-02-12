@@ -1,4 +1,5 @@
 var fs = require('fs');
+var fm = require('../libs/fs-more');
 var path = require('path');
 
 exports.sendRequest = function(req) {
@@ -59,7 +60,7 @@ exports.addApi = function(req) {
 
     var file = path.resolve(site, 'config.json');
     var save = path.resolve(site, 'APIs/' + alias + '.json');
-    var list = require(file);
+    var list = JSON.parse(fs.readFileSync(file, 'utf8'));
 
     if ( list.api[alias] && fs.existsSync(save) ) {
         result.message = '别名已存在,请指定新的别名!';
@@ -104,9 +105,16 @@ exports.modifyApi = function(req) {
         return result;
     }
 
+    var admin = require('./admin');
+    var check = admin.checkAdmin(req.headers["user-key"], req.cookies.userToken);
+    if ( !check.success ) {
+        result.message = '没有完成操作所需要的权限!';
+        return result;
+    }
+
     var file = path.resolve(site, 'config.json');
     var save = path.resolve(site, 'APIs/' + alias + '.json');
-    var list = require(file);
+    var list = JSON.parse(fs.readFileSync(file, 'utf8'));
 
     if ( !list.api[alias] && !fs.existsSync(save) ) {
         result.message = '别名不存在,无法修改!';
@@ -128,6 +136,48 @@ exports.modifyApi = function(req) {
     return {
         success: true,
         message: '接口[' + name + ']已成功保存,请刷新页面查看.'
+    }
+};
+
+exports.saveApiList = function(req, res) {
+    var site = process.site();
+
+    var result = {
+        success: false
+    };
+
+    var admin = require('./admin');
+    var check = admin.checkAdmin(req.headers["user-key"], req.cookies.userToken);
+    if ( !check.success && !check.admin.rank <=2 ) {
+        result.message = '没有完成操作所需要的权限!';
+        return result;
+    }
+
+    var file = path.resolve(site, 'config.json');
+    var list = JSON.parse(fs.readFileSync(file, 'utf8'));
+    var APIs = req.body.api_list;
+    var arrs = [];
+
+    Object.keys(list.api).forEach(function(alias) {
+        if ( !/^\-{3,}$/.test(list.api[alias]) && !APIs[alias] ) {
+            arrs.push(alias);
+        }
+    });
+
+    arrs.forEach(function(alias) {
+        var save = path.resolve(site, 'APIs/' + alias + '.json');
+        if ( fs.existsSync(save) ) {
+            fs.unlinkSync(save);
+        }
+    });
+
+    list.api = APIs;
+
+    fs.writeFileSync(file, JSON.format(list), 'utf8');
+
+    return {
+        success: true,
+        message: '接口列表已成功保存,请刷新页面查看.'
     }
 };
 

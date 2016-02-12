@@ -8,6 +8,7 @@ var fs = require('fs');
 var path = require('path');
 
 var site = process.site();
+var cfg = path.resolve(site, 'config.json');
 
 exports.methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINK', 'UNLINK', 'PURGE'];
 
@@ -23,9 +24,16 @@ exports.api = function(alias) {
         return false;
     }
 
-    return require(file);
+    var list = exports.list();
+
+    var data = JSON.parse(fs.readFileSync(file, 'utf8'));
+
+    data.name = list[alias];
+
+    return data;
 };
 
 exports.list = function() {
-    return require(path.resolve(site, 'config.json')).api;
+    var configs = JSON.parse(fs.readFileSync(cfg, 'utf8'));
+    return configs.api;
 };
