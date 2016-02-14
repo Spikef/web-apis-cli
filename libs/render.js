@@ -64,6 +64,10 @@ var render = function(params, options) {
             data.api = engine.api(params.alias);
             if ( !data.api ) return '';
             break;
+        case routers.admin_list:
+            if ( !data.admin || data.admin.rank>2 ) return '';
+            data.admin_list = engine.admins();
+            break;
     }
 
     options = options || {};

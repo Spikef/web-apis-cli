@@ -1,5 +1,4 @@
 var fs = require('fs');
-var fm = require('../libs/fs-more');
 var path = require('path');
 
 exports.sendRequest = function(req) {
@@ -73,6 +72,7 @@ exports.addApi = function(req) {
     data.alias = alias;
     data.url = req.body.url;
     data.method = req.body.method;
+    data.querys = req.body.querys || [];
     data.header = req.body.header || [];
     data.bodies = req.body.bodies || [];
 
@@ -127,6 +127,7 @@ exports.modifyApi = function(req) {
     data.alias = alias;
     data.url = req.body.url;
     data.method = req.body.method;
+    data.querys = req.body.querys || [];
     data.header = req.body.header || [];
     data.bodies = req.body.bodies || [];
 
@@ -155,7 +156,7 @@ exports.saveApiList = function(req, res) {
 
     var file = path.resolve(site, 'config.json');
     var list = JSON.parse(fs.readFileSync(file, 'utf8'));
-    var APIs = req.body.api_list;
+    var APIs = req.body.api_list || {};
     var arrs = [];
 
     Object.keys(list.api).forEach(function(alias) {
@@ -195,6 +196,159 @@ exports.login = function(req, res) {
     }
 
     return result;
+};
+
+exports.isNameAllow = function(req, res) {
+    var result = { success: false };
+    var username = req.body.username;
+
+    var admin = require('./admin');
+    var check = admin.checkAdmin(req.headers["user-key"], req.cookies.userToken);
+    if ( !check.success ) {
+        result.message = '没有完成操作所需要的权限!';
+        return result;
+    }
+
+    if ( !username || !/^[A-Z0-9_\-]{2,40}$/i.test(username) ) {
+        result.message = '不正确的用户名格式!';
+        return result;
+    }
+
+    var list = admin.list();
+    if ( list[username] ) {
+        result.message = '用户已存在!';
+        return result;
+    }
+
+    return {
+        success: true,
+        message: '可以使用的用户名.'
+    }
+};
+
+exports.saveAdmin = function(req, res) {
+    var result = { success: false }, GoToHome = false;
+
+    var action = req.query.action;
+    if ( !['add', 'modify'].contains(action) ) {
+        result.message = '非法请求!';
+        result.tipArea = 'result';
+        return result;
+    }
+
+    var username = req.body.username;
+    var password = req.body.password;
+    var userRank = Number(req.body.userRank) || 1;
+    var userPass = req.body.userPass;
+
+    if ( !userPass ) {
+        result.message = '请输入您的管理员密码!';
+        result.tipArea = 'userPass';
+        return result;
+    }
+
+    var admin = require('./admin');
+    var allow = admin.checkAdmin(req.headers["user-key"], req.cookies.userToken);
+    if ( !allow.success ) {
+        result.message = '没有完成操作所需要的权限!';
+        result.tipArea = 'result';
+        return result;
+    } else {
+        if ( allow.admin.name === username ) {
+            userRank = allow.admin.rank;
+
+            if ( action === 'modify' && password ) GoToHome = true;
+        } else if ( allow.admin.rank >= userRank ) {
+            result.message = '没有足够的权限操作该级别管理员!';
+            result.tipArea = 'result';
+            return result;
+        }
+
+        allow = admin.checkPassword(allow.admin.name, userPass);
+        if ( !allow.success ) {
+            result.message = '错误的管理员密码!';
+            result.tipArea = 'userPass';
+            return result;
+        }
+    }
+
+    if ( !username || !/^[A-Z0-9_\-]{2,40}$/i.test(username) ) {
+        result.message = '不正确的用户名格式!';
+        result.tipArea = 'username';
+        return result;
+    }
+
+    var list = admin.list();
+    if ( action === 'add' && list[username] ) {
+        result.message = '用户已存在!';
+        result.tipArea = 'username';
+        return result;
+    }
+    if ( action === 'modify' && !list[username] ) {
+        result.message = '用户不存在!';
+        result.tipArea = 'username';
+        return result;
+    }
+
+    if ( action === 'add' && !password ) {
+        result.message = '未输入管理员密码!';
+        result.tipArea = 'password';
+        return result;
+    }
+
+    if ( password && !/^.{6,16}/.test(password) ) {
+        result.message = '不正确的密码格式!';
+        result.tipArea = 'password';
+        return result;
+    }
+
+    if ( action === 'add' ) {
+        result = admin.add(username, password, userRank);
+    } else {
+        result = admin.modify(username, password, userRank);
+    }
+
+    if ( !result.success ) {
+        result.tipArea = 'result';
+    } else {
+        result.GoToHome = GoToHome;
+    }
+
+    return result;
+};
+
+exports.removeAdmin = function(req, res) {
+    var result = { success: false };
+
+    var username = req.body.username;
+    var userPass = req.body.userPass;
+
+    if ( !userPass ) {
+        result.message = '请输入您的管理员密码!';
+        result.tipArea = 'userPass';
+        return result;
+    }
+
+    var admin = require('./admin');
+    var allow = admin.checkAdmin(req.headers["user-key"], req.cookies.userToken);
+    if ( !allow.success ) {
+        result.message = '没有完成操作所需要的权限!';
+        return result;
+    } else {
+        var list = admin.list();
+        if ( list[username] && list[username].userRank <= allow.admin.rank ) {
+            result.message = '没有完成操作所需要的权限!';
+            return result;
+        }
+
+        allow = admin.checkPassword(allow.admin.name, userPass);
+        if ( !allow.success ) {
+            result.message = '错误的管理员密码!';
+            return result;
+        }
+    }
+
+    return admin.remove(username);
 };
 
 function isURL(url){

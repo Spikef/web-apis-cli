@@ -81,6 +81,15 @@ program
             sendHtml(res, html);
         });
 
+        app.get(/^\/(admin_list|admin_list\.html)?$/i, function(req, res) {
+            var html = render({
+                router: render.routers.admin_list,
+                userKey: req.cookies.userKey,
+                userToken: req.cookies.userToken
+            });
+            sendHtml(res, html);
+        });
+
         app.use(/^\/service\/([\w\-\.\(\)]+)\/?$/i, function(req, res) {
             res.header({
                 'Allow': 'POST',

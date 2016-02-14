@@ -125,6 +125,18 @@
     border: none;
 }
 
+/*表单提示文本内容*/
+.form-message {
+    display: inline-block;
+    height: 34px;
+    padding-top: 14px;
+    font-size: 12px;
+}
+.form-btn-message {
+    display: inline-block;
+    font-size: 12px;
+}
+
 /*底部样式*/
 .footer-center {
     padding-top: 20px;
@@ -148,7 +160,7 @@
     margin-bottom: -10px;
 }
 
-/*列表*/
+/*API列表*/
 .large-list {
     padding-left: 0;
     margin: 0;
@@ -167,4 +179,42 @@
 }
 .large-list-item .close {
     margin-left: 10px;
+}
+/*管理员列表*/
+.admin-list {
+    padding-left: 0;
+    margin: 0;
+}
+.admin-list-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.admin-list-item:last-child {
+    margin-bottom: 0;
+}
+.admin-list-item .close {
+    margin-left: 10px;
+}
+.admin-list .default{
+    font-weight: 500;
+    color: #c7254e;
+}
+.admin-list .username{
+    display: inline-block;
+    width: 180px;
+}
+.admin-list .userrank{
+    cursor: pointer;
+}
+/*管理员表单*/
+#dialog-admin .form-group:last-child {
+    margin-bottom: 0;
+    margin-top: 30px;
+}
+#dialog-admin .btn {
+    margin-right: 10px;
 }

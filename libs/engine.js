@@ -13,8 +13,8 @@ var cfg = path.resolve(site, 'config.json');
 exports.methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINK', 'UNLINK', 'PURGE'];
 
 exports.app = function() {
-    var configs = require(path.resolve(site, 'config.json'));
-    return configs.app || {};
+    var config = require(path.resolve(site, 'config.json'));
+    return config.app || {};
 };
 
 exports.api = function(alias) {
@@ -34,6 +34,26 @@ exports.api = function(alias) {
 };
 
 exports.list = function() {
-    var configs = JSON.parse(fs.readFileSync(cfg, 'utf8'));
-    return configs.api;
+    var config = JSON.parse(fs.readFileSync(cfg, 'utf8'));
+    return config.api;
+};
+
+exports.admins = function() {
+    var NamedRanks = require('./admin').NamedRanks;
+
+    var list = [];
+    var config = JSON.parse(fs.readFileSync(cfg, 'utf8'));
+    var admins = config.admin;
+    for (var i in admins) {
+        var rank = NamedRanks[admins[i].userRank];
+
+        list.push({
+            username: admins[i].username,
+            userRank: admins[i].userRank,
+            rankName: rank.name,
+            rankNote: rank.note
+        });
+    }
+
+    return list;
 };

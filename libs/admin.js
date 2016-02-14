@@ -5,8 +5,14 @@ var encrypt = require('./encrypt');
 var site = process.site();
 var file = path.resolve(site, 'config.json');
 
+exports.NamedRanks = {
+    '1': { name: '顶级管理员', note: '可以添加、删除或者修改任意管理员'},
+    '2': { name: '超级管理员', note: '可以添加、删除或者修改3级管理员和进行所有的接口操作'},
+    '3': { name: '普通管理员', note: '可以添加或者修改接口操作'}
+};
+
 exports.add = function(username, password, userRank) {
-    var config = require(file);
+    var config = JSON.parse(fs.readFileSync(file, 'utf8'));
     var admins = config.admin;
     var result = { success: false, message: '添加失败!' };
 
@@ -38,7 +44,7 @@ exports.add = function(username, password, userRank) {
 };
 
 exports.modify = function(username, password, userRank) {
-    var config = require(file);
+    var config = JSON.parse(fs.readFileSync(file, 'utf8'));
     var admins = config.admin;
     var result = { success: false, message: '修改失败!' };
 
@@ -96,7 +102,7 @@ exports.remove = function(username) {
 };
 
 exports.login = function(username, password) {
-    var config = require(file);
+    var config = JSON.parse(fs.readFileSync(file, 'utf8'));
     var admins = config.admin;
     var result = { success: false, message: '登录失败!' };
 
@@ -136,7 +142,7 @@ exports.login = function(username, password) {
 };
 
 exports.checkAdmin = function(key, token) {
-    var config = require(file);
+    var config = JSON.parse(fs.readFileSync(file, 'utf8'));
     var admins = config.admin;
     var result = { success: false, message: '授权失败!' };
 
@@ -165,6 +171,39 @@ exports.checkAdmin = function(key, token) {
     }
 
     return result;
+};
+
+exports.checkPassword = function(username, password) {
+    var config = JSON.parse(fs.readFileSync(file, 'utf8'));
+    var admins = config.admin;
+    var result = { success: false, message: '校验失败!' };
+
+    if ( !username || !password ) {
+        result.message = '缺少必要的参数!';
+        return result;
+    }
+
+    if ( !admins[username] ) {
+        result.message = '找不到指定用户!';
+        return result;
+    }
+
+    var admin = admins[username];
+
+    if ( encrypt.mix(password, admin.randSeed) === admin.password ) {
+        result.success = true;
+        result.message = '校验成功!';
+    } else {
+        result.message = '密码错误!';
+    }
+
+    return result;
+};
+
+exports.list = function() {
+    var config = JSON.parse(fs.readFileSync(file, 'utf8'));
+
+    return config.admin;
 };
 
 function saveAdmin(admin) {

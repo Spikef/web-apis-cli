@@ -1,10 +1,13 @@
 <!DOCTYPE html>
+<%
+    var _head_title = api && api.name ? api.name : '添加接口';
+%>
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title><%=app.title%> - 添加接口</title>
+    <title><%=app.title%> - <%=_head_title%></title>
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,6 +24,37 @@
         <% include form_api.html %>
 
         <% include form_url.html %>
+
+        <div class="panel panel-default" id="get-query">
+            <div class="panel-heading">请求URL参数</div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th width="30%">参数名称</th>
+                    <th>参数说明</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <%
+                if (api && api.querys && api.querys.length) {
+                api.querys.forEach(function(item){
+                %>
+                <tr class="query-parametric">
+                    <td>
+                        <span class="form-normal input-query-key"><%=item.key%></span>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control input-query-note" value="<%=item.note%>">
+                    </td>
+                </tr>
+                <%
+                });
+                }
+                %>
+                </tbody>
+            </table>
+        </div>
 
         <div class="panel panel-default" id="post-bodies">
             <div class="panel-heading">请求Body参数</div>

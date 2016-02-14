@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title><%=app.title%> - 编辑管理员</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./resource/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./resource/css/bootstrap.theme.css">
+    <link rel="stylesheet" href="./resource/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./resource/css/main.css">
+</head>
+<body>
+    <% include nav.html %>
+
+    <div class="container">
+        <div class="panel panel-primary" id="dialog-admin">
+            <div class="panel-heading">添加管理员</div>
+
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">您的密码</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="actor-password" placeholder="Password">
+                                <span class="input-group-addon watch-password"><i class="fa fa-eye"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="form-message text-warning" id="message-userPass">系统需要验证您的密码</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="admin-username" placeholder="Username">
+                                <span class="input-group-addon" id="check-username"><i class="fa fa-check"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="form-message text-muted" id="message-username">用户名只能是字母, 数字或者下划线</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">登录密码</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="admin-password" placeholder="Password">
+                                <span class="input-group-addon watch-password"><i class="fa fa-eye"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="form-message text-muted" id="message-password">密码长度为6-16位</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">管理员类型</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="admin-userRank" id="userRank-1" value="1" disabled> 顶级管理员
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="admin-userRank" id="userRank-2" value="2"> 超级管理员
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="admin-userRank" id="userRank-3" value="3" checked> 普通管理员
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <span class="btn btn-info btn-save-admin" data-action="add">
+                                <i class="fa fa-save"></i> 保存管理员信息
+                            </span>
+                            <span class="form-btn-message" id="message-result"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">管理员列表</div>
+
+            <div class="panel-body">
+                <%
+                if (admin_list && admin_list.length) {
+                %>
+                <ul class="admin-list" id="admin-list">
+                    <%
+                    admin_list.forEach(function(user){
+                        var _default_style = admin && admin.name && (admin.name === user.username) ? ' default' : '';
+                        var _allow_modify = admin && admin.rank && (admin.rank < user.userRank) || _default_style ? true : false;
+                        var _allow_remove = admin && admin.rank && (admin.rank < user.userRank) ? true : false;
+                        var _modify_mode = _default_style ? 'doSelf' : 'modify';
+                    %>
+                    <li class="admin-list-item<%=_default_style%>" admin-name="<%=user.username%>" admin-rank="<%=user.userRank%>">
+                        <%if (_allow_remove) {%>
+                        <a href="#" class="close remove" aria-label="Remove" title="删除">
+                            <i class="fa fa-times"></i>
+                        </a>
+                        <%}%>
+                        <%if (_allow_modify) {%>
+                        <a href="#" class="close <%=_modify_mode%>" aria-label="Modify" title="编辑">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <%}%>
+                        <span class="username"><%=user.username%></span>
+                        <span class="userrank" data-toggle="tooltip" data-placement="right" title="<%=user.rankNote%>"><%=user.rankName%></span>
+                    </li>
+                    <%
+                    });
+                    %>
+                </ul>
+                <%}%>
+            </div>
+
+            <div class="panel-footer">
+                <span class="btn btn-success btn-add-admin">
+                    <i class="fa fa-plus"></i> 添加管理员
+                </span>
+            </div>
+        </div>
+
+        <% include alert.html %>
+
+        <div class="modal" tabindex="-2" id="confirm-remove">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                <span class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </span>
+                        <h4 class="modal-title">删除<span class="username"></span></h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="check-password">您的管理员密码</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="check-password" placeholder="Password">
+                                    <span class="input-group-addon watch-password"><i class="fa fa-eye"></i></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <span class="btn btn-default" data-dismiss="modal"> 取 消 </span>
+                        <span class="btn btn-danger btn-confirm-remove" data-dismiss="modal"> 删 除 </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <% include footer.html %>
+
+    <script src="./resource/js/jquery.min.js" type="text/javascript"></script>
+    <script src="./resource/js/js.cookie.js" type="text/javascript"></script>
+    <script src="./resource/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="./resource/js/bootstrap.ext.js" type="text/javascript"></script>
+    <script src="./resource/js/alert.js" type="text/javascript"></script>
+    <script src="./resource/js/main.js" type="text/javascript"></script>
+    <script src="./resource/js/admin_list.js" type="text/javascript"></script>
+</body>
+</html>

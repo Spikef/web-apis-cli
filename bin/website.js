@@ -35,7 +35,9 @@ program
 
         try{
             fm.copyFolderSync(source, target);
-            fs.mkdirSync(path.resolve(target, 'APIs'));
+
+            var api_folder = path.resolve(target, 'APIs');
+            if ( !fs.existsSync(api_folder) ) fs.mkdirSync(api_folder);
 
             var cfg = require(config);
             cfg.app = {

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title><%=app.title%> - 首页</title>
+    <title><%=app.title%> - <%=api.name%></title>
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,6 +19,31 @@
 
     <div class="container">
         <% include form_url.html %>
+
+        <div class="panel panel-default" id="get-query">
+            <div class="panel-heading">请求URL参数</div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th width="30%">参数名称</th>
+                    <th>参数说明</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <%api.querys.forEach(function(item){%>
+                <tr class="query-parametric">
+                    <td>
+                        <span class="form-normal input-query-key"><%=item.key%></span>
+                    </td>
+                    <td>
+                        <span class="form-normal input-query-key"><%=item.note%></span>
+                    </td>
+                </tr>
+                <%});%>
+                </tbody>
+            </table>
+        </div>
 
         <div class="panel panel-default" id="post-bodies">
             <div class="panel-heading">请求Body参数</div>

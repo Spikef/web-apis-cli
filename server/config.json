@@ -1,23 +1,11 @@
 {
-    "app": {
-        "name": "WordEach",
-        "port": 8831,
-        "title": "WordEach",
-        "engine": "WebAPIs",
-        "version": "1.0.2",
-        "seed": "123456"
-    },
-    "api": {
-        "a": "测试",
-        "b": "b",
-        "seperator_1": "---",
-        "c": "c"
-    },
+    "app": {},
+    "api": {},
     "admin": {
         "admin": {
             "username": "admin",
-            "password": "dce212e2f684ddebd965511d84f229acf676e2ed",
-            "randSeed": "7a0974f1b742e543e794a4d6acc62a8c3e10252c",
+            "password": "0e5d1b62e03b785c416aeaf0c4196fa2608d0085",
+            "randSeed": "3a694ee76b8fcb15e79fa96c86c4968a8ee1119e",
             "userRank": 1
         }
     }

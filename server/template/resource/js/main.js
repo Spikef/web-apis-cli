@@ -12,6 +12,48 @@
                 $('.post-result-note').empty();
             }
         },
+        // 请求URL地址
+        onUrlChanged: function() {
+            var self = this;
+
+            $('#post-url').on('blur', function(){
+                var oldList = {};
+                $('#get-query').find('.query-parametric').each(function(){
+                    var key = $(this).find('.input-query-key:first').text();
+                    var note = $(this).find('.input-query-note:first').val() || '';
+
+                    if ( key ) {
+                        oldList[key] = note;
+                    }
+                });
+
+                $('#get-query table tbody').empty();
+
+                var arr = [], queryList = [];
+                var url = $(this).val();
+                //#符号之后的值称为hash，都不会加到request请求中去
+                url = url.split('#')[0];
+                //获取queryString 第一个？号后面的全是查询字符串
+                arr = url.split('?');
+                arr.shift();
+                var qStr = arr.join('?');
+                var list = self.parseQueryString(qStr);
+                var keys = Object.keys(list);
+
+                keys.forEach(function(key) {
+                    var query = {};
+
+                    query.key = key;
+                    query.note = oldList[key] || '';
+
+                    queryList.push(query);
+                });
+
+                queryList.forEach(function(query) {
+                    self.appendParams('query', { key: query.key, note: query.note });
+                });
+            });
+        },
         // 请求body和header
         onReqDataSwitch: function() {
             $('#check-bodies').on('click', function(){
@@ -157,6 +199,7 @@
                         alias: alias,
                         url: post.url,
                         method: post.method,
+                        querys: post.querys,
                         header: post.header,
                         bodies: post.bodies
                     },
@@ -198,6 +241,7 @@
                         alias: alias,
                         url: post.url,
                         method: post.method,
+                        querys: post.querys,
                         header: post.header,
                         bodies: post.bodies
                     },
@@ -292,15 +336,17 @@
                         var data = xhr.responseJSON;
 
                         if ( statusText === 'success' ) {
-                            $('#dialog-login').modal('hide');
-                            alert.success(data.message, '登录成功');
+                            window.location.reload();
+
+                            //$('#dialog-login').modal('hide');
+                            //alert.success(data.message, '登录成功');
                         } else {
                             $('#dialog-login .alert').show();
                             $('#dialog-login .alert p').text('登录失败: ' + data.message);
 
                             setTimeout(function() {
                                 $('#dialog-login .alert').hide();
-                            }, 3000);
+                            }, 1000);
                         }
 
                         self.switchLoginButton('open');
@@ -317,6 +363,8 @@
             $('#logout').on('click', function() {
                 Cookies.remove('userKey');
                 Cookies.remove('userToken');
+
+                window.location.href = '/';
             });
         },
 
@@ -348,6 +396,18 @@
             var html = '';
 
             switch ( type ) {
+                case 'query':
+                    html = [
+                        '                <tr class="query-parametric">',
+                        '                    <td>',
+                        '                        <span class="form-normal input-query-key">' + params.key + '</span>',
+                        '                    </td>',
+                        '                    <td>',
+                        '                        <input type="text" class="form-control input-query-note" value="' + params.note + '">',
+                        '                    </td>',
+                        '                </tr>'
+                    ].join('');
+                    break;
                 case 'body':
                     html = [
                         '               <tr class="body-parametric">',
@@ -426,16 +486,28 @@
 
             if ( /^body/.test(type) ) {
                 $('#post-bodies table tbody').append(html);
-            } else {
+            } else if( /^head/.test(type) ) {
                 $('#post-header table tbody').append(html);
+            } else {
+                $('#get-query table tbody').append(html);
             }
         },
         // 提交数据
         packPostData: function() {
             var url = $('#post-url').val();
             var method = $('#post-method').val();
+            var querys = [];
             var header = [];
             var bodies = [];
+
+            $('#get-query').find('.query-parametric').each(function(){
+                var key = $(this).find('.input-query-key:first').text();
+                var note = $(this).find('.input-query-note:first').val() || '';
+
+                if ( key ) {
+                    querys.push({key: key, note: note});
+                }
+            });
 
             if ( $('#check-header' ).is(':checked') ) {
                 $('#post-header').find('.head-parametric').each(function(){
@@ -461,7 +533,7 @@
                 });
             }
 
-            return { url: url, method: method, header: header, bodies: bodies };
+            return { url: url, method: method, querys: querys, header: header, bodies: bodies };
         },
         // 启用禁用提交按钮
         switchRequestButton(close) {
@@ -554,6 +626,7 @@
         // 初始化
         init: function() {
             this.initialStatus();
+            this.onUrlChanged();
             this.onReqDataSwitch();
             this.onChangeParams();
             this.onSubmitRequest();
