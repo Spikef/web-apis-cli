@@ -1,4 +1,4 @@
-var exec = require('child_process').exec;
+var cp = require('child_process');
 var os = require('os');
 
 // platforms
@@ -42,9 +42,12 @@ function mac(str, fn) {
 
 // exec
 
-function execute(program, str, fn) {
-    var cmd = escape(['printf', str]) + ' | ' + program;
-    exec(cmd, fn || function(){});
+function execute(program, str) {
+    var args = escape([str]);
+
+    cp.execSync(program, {
+        input: args
+    })
 }
 
 // return a shell compatible format
