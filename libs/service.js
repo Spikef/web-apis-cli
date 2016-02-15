@@ -16,12 +16,32 @@ exports.sendRequest = function(req) {
     req.body.header = req.body.header || [];
     req.body.bodies = req.body.bodies || [];
 
+    var bodies = [];
+    req.body.bodies.forEach(function(body) {
+        bodies.push(body.key + '=' + body.value);
+    });
+
+    var header = {};
+    req.body.header.forEach(function(head) {
+        if ( !header[head.key] ) {
+            header[head.key] = head.value;
+        } else if ( header[head.key] instanceof Array ) {
+            header[head.key].push(head.value);
+        } else {
+            header[head.key] = [header[head.key]];
+            header[head.key].push(head.value);
+        }
+    });
+
+    header['Content-Type'] = 'application/x-www-form-urlencoded';
+
     var fetch = require('node-fetch');
 
     var promise = fetch(req.body.url, {
         timeout: 20000,
-        method: req.body.method,
-        body: req.body.bodies.join('&')
+        method : req.body.method,
+        headers: header,
+        body   : bodies.join('&')
     });
 
     return {

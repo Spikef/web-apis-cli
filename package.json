@@ -3,7 +3,7 @@
   "author": "Spikef",
   "repository": "https://github.com/Spikef/justshow/web-apis-cli",
   "description": "A simple web apis test framework based on html.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "keywords": [
     "web",
     "api",
