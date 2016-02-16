@@ -593,7 +593,7 @@
                 }
             });
 
-            if ( $('#check-header' ).is(':checked') ) {
+            if ( !$('#check-header').length || $('#check-header' ).is(':checked') ) {
                 $('#post-header').find('.head-parametric').each(function(){
                     var key = $(this).find('.input-head-key:first').val();
                     var value = $(this).find('.input-head-value:first').val();
@@ -605,7 +605,7 @@
                 });
             }
 
-            if ( $('#check-bodies' ).is(':checked') ) {
+            if ( !$('#check-bodies' ).length || $('#check-bodies' ).is(':checked') ) {
                 $('#post-bodies').find('.body-parametric').each(function(){
                     var key = $(this).find('.input-body-key:first').val();
                     var value = $(this).find('.input-body-value:first').val();
