@@ -26,12 +26,16 @@
         <% include form_url.html %>
 
         <div class="panel panel-default" id="get-query">
-            <div class="panel-heading">请求URL参数</div>
+            <div class="panel-heading">
+                请求URL参数
+                <span class="pull-right expands-or-collapses"><i class="fa fa-angle-double-up"></i></span>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th width="30%">参数名称</th>
+                    <th width="20%">参数名称</th>
                     <th>参数说明</th>
+                    <th width="20%"></th>
                 </tr>
                 </thead>
 
@@ -39,6 +43,8 @@
                 <%
                 if (api && api.querys && api.querys.length) {
                 api.querys.forEach(function(item){
+                    var _item_readonly = item.readonly ? ' checked' : '';
+                    var _item_hidden = item.hidden ? ' checked' : '';
                 %>
                 <tr class="query-parametric">
                     <td>
@@ -46,6 +52,14 @@
                     </td>
                     <td>
                         <input type="text" class="form-control input-query-note" value="<%=item.note%>">
+                    </td>
+                    <td>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" class="input-query-readonly"<%=_item_readonly%>> 只读
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" class="input-query-hidden"<%=_item_hidden%>> 隐藏
+                        </label>
                     </td>
                 </tr>
                 <%
@@ -57,7 +71,10 @@
         </div>
 
         <div class="panel panel-default" id="post-bodies">
-            <div class="panel-heading">请求Body参数</div>
+            <div class="panel-heading">
+                请求Body参数
+                <span class="pull-right expands-or-collapses"><i class="fa fa-angle-double-up"></i></span>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -107,7 +124,10 @@
         </div>
 
         <div class="panel panel-default" id="post-header">
-            <div class="panel-heading">自定义Header</div>
+            <div class="panel-heading">
+                自定义Header
+                <span class="pull-right expands-or-collapses"><i class="fa fa-angle-double-up"></i></span>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr>

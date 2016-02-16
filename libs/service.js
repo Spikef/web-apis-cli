@@ -96,6 +96,11 @@ exports.addApi = function(req) {
     data.header = req.body.header || [];
     data.bodies = req.body.bodies || [];
 
+    data.querys.forEach(function(query) {
+        query.hidden = query.hidden && query.hidden !== 'false' || false;
+        query.readonly = query.readonly && query.readonly !== 'false' || false;
+    });
+
     fs.writeFileSync(file, JSON.format(list), 'utf8');
     fs.writeFileSync(save, JSON.format(data), 'utf8');
 
@@ -150,6 +155,11 @@ exports.modifyApi = function(req) {
     data.querys = req.body.querys || [];
     data.header = req.body.header || [];
     data.bodies = req.body.bodies || [];
+
+    data.querys.forEach(function(query) {
+        query.hidden = query.hidden && query.hidden !== 'false' || false;
+        query.readonly = query.readonly && query.readonly !== 'false' || false;
+    });
 
     fs.writeFileSync(file, JSON.format(list), 'utf8');
     fs.writeFileSync(save, JSON.format(data), 'utf8');

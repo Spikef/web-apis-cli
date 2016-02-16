@@ -23,7 +23,8 @@
                 <%}else{%>
                 <li><a href="/">首页</a></li>
                 <%}%>
-                <li class="dropdown">
+                <%var _drop_down_active = (nav===routers.api) ? ' active' : ''%>
+                <li class="dropdown<%=_drop_down_active%>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API列表 <span class="caret"></span></a>
                     <%
                     var api_alias_list = Object.keys(list);
@@ -55,12 +56,28 @@
                     }
                 }
                 %>
-                <%if (admin) {%>
+                <%
+                if (admin) {
+                    if (nav===routers.api_list) {
+                %>
+                <li class="active"><a href="/api_list">编辑接口</a></li>
+                <%  }else{%>
                 <li><a href="/api_list">编辑接口</a></li>
-                <%}%>
-                <%if (admin && admin.rank<=2) {%>
+                <%
+                    }
+                }
+                %>
+                <%
+                if (admin && admin.rank<=2) {
+                    if (nav===routers.admin_list) {
+                %>
+                <li class="active"><a href="/admin_list">编辑管理员</a></li>
+                <%  }else{%>
                 <li><a href="/admin_list">编辑管理员</a></li>
-                <%}%>
+                <%
+                    }
+                }
+                %>
                 <%if (!admin) {%>
                 <li><a href="#" data-toggle="modal" data-target="#dialog-login">登录</a></li>
                 <%}else{%>

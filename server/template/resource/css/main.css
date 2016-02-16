@@ -2,7 +2,6 @@
 .url .areaLeft {
     width: 50%;
     display: inline-block;
-
 }
 .url .areaLeft .left {
     float: left;
@@ -27,6 +26,13 @@
 .url .areaRight .btn {
     margin-left: 30px;
     margin-right: 20px;
+}
+
+.url .apiLeft {
+    width: 80%;
+}
+.url .apiRight {
+    width: 19%;
 }
 
 @media all and (max-width: 992px) {
@@ -217,4 +223,8 @@
 }
 #dialog-admin .btn {
     margin-right: 10px;
+}
+/*折叠或展开按钮*/
+.expands-or-collapses {
+    cursor: pointer;
 }

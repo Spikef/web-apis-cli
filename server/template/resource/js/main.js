@@ -12,24 +12,52 @@
                 $('.post-result-note').empty();
             }
         },
+        // 折叠或者展开
+        onExpandCollapse: function() {
+            var icons = {
+                expand: '<i class="fa fa-angle-double-down"></i>',
+                collapse: '<i class="fa fa-angle-double-up"></i>'
+            };
+
+            $('.expands-or-collapses').on('click', function() {
+                var icon = $(this).html();
+
+                if ( /\-up/.test(icon) ) {
+                    $(this).html(icons.expand);
+
+                    $(this).parents('.panel:first').find('table:first').hide();
+                    $(this).parents('.panel:first').find('.panel-body:first').hide();
+                    $(this).parents('.panel:first').find('.panel-footer:first').hide();
+                } else {
+                    $(this).html(icons.collapse);
+                    $(this).parents('.panel:first').find('table:first').show();
+                    $(this).parents('.panel:first').find('.panel-body:first').show();
+                    $(this).parents('.panel:first').find('.panel-footer:first').show();
+                }
+            });
+        },
         // 请求URL地址
         onUrlChanged: function() {
             var self = this;
 
             $('#post-url').on('blur', function(){
+                if ( $(this).attr('readonly') ) return;
+
                 var oldList = {};
                 $('#get-query').find('.query-parametric').each(function(){
                     var key = $(this).find('.input-query-key:first').text();
                     var note = $(this).find('.input-query-note:first').val() || '';
+                    var hidden = $(this).find('.input-query-hidden:first').is(':checked');
+                    var readonly = $(this).find('.input-query-readonly:first').is(':checked');
 
                     if ( key ) {
-                        oldList[key] = note;
+                        oldList[key] = { note: note, hidden: hidden, readonly: readonly };
                     }
                 });
 
                 $('#get-query table tbody').empty();
 
-                var arr = [], queryList = [];
+                var arr, queryList = [];
                 var url = $(this).val();
                 //#符号之后的值称为hash，都不会加到request请求中去
                 url = url.split('#')[0];
@@ -44,14 +72,48 @@
                     var query = {};
 
                     query.key = key;
-                    query.note = oldList[key] || '';
+                    query.note = oldList[key] ? oldList[key].note : '';
+                    query.hidden = oldList[key] ? oldList[key].hidden : false;
+                    query.readonly = oldList[key] ? oldList[key].readonly : false;
 
                     queryList.push(query);
                 });
 
                 queryList.forEach(function(query) {
-                    self.appendParams('query', { key: query.key, note: query.note });
+                    self.appendParams('query', query);
                 });
+            });
+
+            $('.input-query-value').on('input propertyChange', function() {
+                if ( !self.queryParams ) {
+                    var arr, list, host, hash;
+                    var url = $('#post-url').val();
+                    //#符号之后的值称为hash，都不会加到request请求中去
+                    hash = url.indexOf('#') > -1 ? url.substr(url.indexOf('#')) : '';
+                    url = url.split('#')[0];
+                    //获取queryString 第一个？号后面的全是查询字符串
+                    host = url.indexOf('?') > -1 ? url.substr(0, url.indexOf('?')) : url;
+                    arr = url.split('?');
+                    arr.shift();
+                    var qStr = arr.join('?');
+                    list = self.parseQueryString(qStr);
+
+                    self.queryParams = {
+                        host: host,
+                        hash: hash,
+                        list: list
+                    }
+                }
+
+                var key = $(this).attr('data-key');
+                var value = $(this).val();
+
+                if ( self.queryParams && typeof self.queryParams.list[key] !== 'undefined' ) {
+                    self.queryParams.list[key] = value;
+
+                    var postUrl = self.queryParams.host + '?' + self.joinQueryString(self.queryParams.list) + self.queryParams.hash;
+                    $('#post-url').val(postUrl);
+                }
             });
         },
         // 请求body和header
@@ -389,6 +451,16 @@
 
             return res;
         },
+        // 合并参数
+        joinQueryString: function(KVPairs) {
+            var arr = [];
+            for (var key in KVPairs) {
+                var value = KVPairs[key];
+                arr.push(key + '=' + value);
+            }
+
+            return arr.join('&');
+        },
         // 增加参数
         appendParams: function(type, params) {
             params = params || { key: '', value: '', note: '' };
@@ -397,6 +469,8 @@
 
             switch ( type ) {
                 case 'query':
+                    var hidden = params.hidden ? ' checked' : '';
+                    var readonly = params.readonly ? ' checked' : '';
                     html = [
                         '                <tr class="query-parametric">',
                         '                    <td>',
@@ -404,6 +478,14 @@
                         '                    </td>',
                         '                    <td>',
                         '                        <input type="text" class="form-control input-query-note" value="' + params.note + '">',
+                        '                    </td>',
+                        '                    <td>',
+                        '                        <label class="checkbox-inline">',
+                        '                            <input type="checkbox" class="input-query-readonly"' + readonly + '> 只读',
+                        '                        </label>',
+                        '                        <label class="checkbox-inline">',
+                        '                            <input type="checkbox" class="input-query-hidden"' + hidden + '> 隐藏',
+                        '                        </label>',
                         '                    </td>',
                         '                </tr>'
                     ].join('');
@@ -503,9 +585,11 @@
             $('#get-query').find('.query-parametric').each(function(){
                 var key = $(this).find('.input-query-key:first').text();
                 var note = $(this).find('.input-query-note:first').val() || '';
+                var hidden = $(this).find('.input-query-hidden:first').is(':checked');
+                var readonly = $(this).find('.input-query-readonly:first').is(':checked');
 
                 if ( key ) {
-                    querys.push({key: key, note: note});
+                    querys.push({key: key, note: note, hidden: hidden, readonly: readonly});
                 }
             });
 
@@ -626,6 +710,7 @@
         // 初始化
         init: function() {
             this.initialStatus();
+            this.onExpandCollapse();
             this.onUrlChanged();
             this.onReqDataSwitch();
             this.onChangeParams();

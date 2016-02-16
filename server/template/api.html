@@ -18,35 +18,84 @@
     <% include nav.html %>
 
     <div class="container">
-        <% include form_url.html %>
+        <% include form_url_api.html %>
 
         <div class="panel panel-default" id="get-query">
-            <div class="panel-heading">请求URL参数</div>
+            <div class="panel-heading">
+                请求URL参数
+                <span class="pull-right expands-or-collapses"><i class="fa fa-angle-double-up"></i></span>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th width="30%">参数名称</th>
+                    <th width="20%">参数名称</th>
+                    <th width="30%">参数值</th>
                     <th>参数说明</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <%api.querys.forEach(function(item){%>
+            <%
+            (function(){
+                var parseQueryString = function(queryString){
+                    var res = {};
+
+                    //查询字符串为空直接返回 避免出现这样的返回值{"":""}
+                    if (queryString.trim().length === 0){
+                        return res;
+                    }
+
+                    //获取参数
+                    var arr = queryString.split('&');
+                    for (var i = 0; i <  arr.length; i++) {
+                        var itemArr = arr[i].split('=');
+                        //第一个=号之前的是name 后面的全是值
+                        var name = itemArr.shift();
+                        var value = itemArr.join('=');
+                        res[name] = value;
+                    }
+
+                    return res;
+                };
+
+                var arrays;
+                var postUrl = api.url;
+                postUrl = postUrl.split('#')[0];
+                arrays = postUrl.split('?');
+                arrays.shift();
+                var queryString = arrays.join('?');
+                var queryList = parseQueryString(queryString);
+
+                api.querys.forEach(function(item){
+                    var _value_readonly = item.readonly ? ' readonly' : '';
+                    var _query_value = queryList[item.key] || '';
+                    if (!item.hidden) {
+            %>
                 <tr class="query-parametric">
                     <td>
                         <span class="form-normal input-query-key"><%=item.key%></span>
                     </td>
                     <td>
-                        <span class="form-normal input-query-key"><%=item.note%></span>
+                        <input class="form-control input-query-value" data-key="<%=item.key%>" type="text" value="<%=_query_value%>"<%=_value_readonly%>>
+                    </td>
+                    <td>
+                        <input type="text" class="form-normal input-query-note" value="<%=item.note%>" readonly>
                     </td>
                 </tr>
-                <%});%>
+            <%
+                    }
+                });
+            })();
+            %>
                 </tbody>
             </table>
         </div>
 
         <div class="panel panel-default" id="post-bodies">
-            <div class="panel-heading">请求Body参数</div>
+            <div class="panel-heading">
+                请求Body参数
+                <span class="pull-right expands-or-collapses"><i class="fa fa-angle-double-up"></i></span>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -75,7 +124,10 @@
         </div>
 
         <div class="panel panel-default" id="post-header">
-            <div class="panel-heading">自定义Header</div>
+            <div class="panel-heading">
+                自定义Header
+                <span class="pull-right expands-or-collapses"><i class="fa fa-angle-double-up"></i></span>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr>
