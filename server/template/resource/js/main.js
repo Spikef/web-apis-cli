@@ -620,7 +620,7 @@
             return { url: url, method: method, querys: querys, header: header, bodies: bodies };
         },
         // 启用禁用提交按钮
-        switchRequestButton(close) {
+        switchRequestButton: function(close) {
             if ( close && close !== 'open' ) {
                 var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
                 $('#sendRequest').append(spinner);
@@ -636,7 +636,7 @@
                 $('.url fieldset').removeAttr('disabled');
             }
         },
-        switchAddApiButton(close) {
+        switchAddApiButton: function(close) {
             if ( close && close !== 'open' ) {
                 var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
                 $('#addNewApi').append(spinner);
@@ -652,7 +652,7 @@
                 $('.add fieldset').removeAttr('disabled');
             }
         },
-        switchModifyButton(close) {
+        switchModifyButton: function(close) {
             if ( close && close !== 'open' ) {
                 var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
                 $('#modifyApi').append(spinner);
@@ -668,7 +668,7 @@
                 $('.add fieldset').removeAttr('disabled');
             }
         },
-        switchSaveButton(close) {
+        switchSaveButton: function(close) {
             if ( close && close !== 'open' ) {
                 var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
                 $('.btn-save-list').append(spinner);
@@ -684,7 +684,7 @@
                 $('.btn-add-line').removeAttr('disabled');
             }
         },
-        switchLoginButton(close) {
+        switchLoginButton: function(close) {
             if ( close && close !== 'open' ) {
                 var spinner = '<i class="fa fa-circle-o-notch fa-spin" style="margin-left: 2px"></i>';
                 $('#admin-login').append(spinner);
