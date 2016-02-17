@@ -219,9 +219,9 @@
 
                             header = '<div class="response-result">' + header + '</div>';
 
-                            var body = data.type === 'json' ? JSON.stringify(data.body) : HTML.stringify(data.body);
+                            var body = data.type === 'json' ? JSON.stringify(data.body, null, 2) : HTML.stringify(data.body);
 
-                            body = '<div class="response-result">' + body + '</div>';
+                            body = '<pre class="response-result">' + body + '</pre>';
 
                             var status =
                                 '<span class="title">Status Code: </span>' + xhr.status + '<br />' +
