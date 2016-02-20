@@ -223,8 +223,9 @@
 
                             body = '<pre class="response-result">' + body + '</pre>';
 
+                            var statusCode = data.status || xhr.status;
                             var status =
-                                '<span class="title">Status Code: </span>' + xhr.status + '<br />' +
+                                '<span class="title">Status Code: </span>' + statusCode + '<br />' +
                                 '<span class="title">Status Text: </span>' + data.message;
 
                             status = '<div class="response-result">' + status + '</div>';

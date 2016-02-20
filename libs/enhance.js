@@ -162,7 +162,15 @@ process.site = function() {
 
     var version = require('../package.json').version;
     if ( !configs.app.version || version !== configs.app.version ) {
-        console.log('不受支持的版本, 请先使用[wa update]命令升级。'.yellow);
+        var siteVer = configs.app.version || 0;
+        var compare = require('../libs/helper').compareVersion(version, siteVer);
+
+        if ( compare === '<' ) {
+            console.log('不受支持的程序版本, 请先使用[npm update web-apis-cli -g]命令升级。'.yellow);
+        } else {
+            console.log('不受支持的网站版本, 请先使用[wa update]命令升级。'.yellow);
+        }
+
         process.exit(1);
     }
 

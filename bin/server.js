@@ -121,11 +121,12 @@ program
                                         type = 'json';
                                     }catch (e) {}
 
-                                    res.status(response.status);
+                                    res.status(200);
                                     res.send({
                                         success: true,
                                         message: response.statusText,
                                         headers: response.headers.raw(),
+                                        status: response.status,
                                         type: type,
                                         body: body
                                     });
