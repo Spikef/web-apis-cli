@@ -13,14 +13,14 @@
     "wa": "./bin/wa.js"
   },
   "dependencies": {
-    "body-parser": "^1.14.2",
+    "body-parser": "^1.15.0",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "cookie-parser": "^1.4.1",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "fecha": "^1.2.2",
-    "json-format": "^0.1.1",
+    "json-format": "^0.1.2",
     "node-fetch": "^1.3.3"
   },
   "devDependencies": {},
