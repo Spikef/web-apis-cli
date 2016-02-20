@@ -8,6 +8,8 @@
     var app = {
         // 初始化状态
         initialStatus: function() {
+            this.readFromCache();
+
             if ( $(window).width() < 768 ) {
                 $('.post-result-note').empty();
             }
@@ -618,7 +620,71 @@
                 });
             }
 
-            return { url: url, method: method, querys: querys, header: header, bodies: bodies };
+            var from = encodeURIComponent(window.location.href);
+            var formData = { from: from, url: url, method: method, querys: querys, header: header, bodies: bodies };
+
+            this.saveFormCache(formData);
+
+            return formData;
+        },
+        // 将表单数据保存到localStorage
+        saveFormCache: function(data) {
+            var href = window.location.href;
+            var name = encodeURIComponent(href);
+            var text = JSON.stringify(data);
+
+            localStorage.setItem('last_form_data', name);
+            localStorage.setItem(name, text);
+        },
+        // 从localStorage读取表单数据
+        readFromCache: function() {
+            var href = window.location.href;
+            var name = encodeURIComponent(href);
+            var last = localStorage.getItem('last_form_data');
+
+            if ( !last ) return;
+
+            var read = localStorage.getItem(name) || localStorage.getItem(last);
+
+            if ( !read ) return;
+
+            var data = JSON.parse(read);
+
+            // 填充header数据
+            var header = {};
+            data.header.forEach(function(head) {
+                header[head.key] = head;
+            });
+
+            $('#post-header').find('.head-parametric').each(function(){
+                var key = $(this).find('.input-head-key:first').val();
+
+                if ( header[key] ) {
+                    $(this).find('.input-head-value:first').val(header[key].value);
+                    $(this).find('.input-head-note:first').val(header[key].note);
+                }
+            });
+
+            // 填充body数据
+            var bodies = {};
+            data.bodies.forEach(function(body) {
+                bodies[body.key] = body;
+            });
+
+            $('#post-bodies').find('.body-parametric').each(function(){
+                var key = $(this).find('.input-body-key:first').val();
+
+                if ( bodies[key] ) {
+                    $(this).find('.input-body-value:first').val(bodies[key].value);
+                    $(this).find('.input-body-note:first').val(bodies[key].note);
+                }
+            });
+
+            // 填充url数据
+            if ( name === data.from ) {
+                $('#post-url').val(data.url);
+                $('#post-method').val(data.method);
+            }
         },
         // 启用禁用提交按钮
         switchRequestButton: function(close) {

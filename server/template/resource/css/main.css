@@ -110,6 +110,9 @@
 .response-result .title {
     color: #c7254e;
     font-weight: 500;
+    margin-right: 5px;
+    display: inline-block;
+    min-width: 100px;
 }
 
 /*提示框*/
