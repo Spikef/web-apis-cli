@@ -4,6 +4,18 @@
 
 A simple web api test framework based on node/express.
 
+快速使用:
+
+    npm install web-apis-cli -g
+
+    wa init test
+
+    cd test
+
+    wa start
+
+    打开浏览器,在地址栏里面ctrl+V/⌘+V
+
 ## Install
 
 `npm install web-apis-cli -g`

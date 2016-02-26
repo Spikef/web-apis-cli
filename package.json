@@ -3,7 +3,7 @@
   "author": "Spikef",
   "repository": "https://github.com/Spikef/web-apis-cli",
   "description": "A simple web api test framework based on node/express.",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "keywords": [
     "web",
     "api",
