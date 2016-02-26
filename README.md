@@ -14,7 +14,7 @@ A simple web api test framework based on node/express.
 
     wa start
 
-    打开浏览器,在地址栏里面ctrl+V/⌘+V(初始管理员账号`admin`,密码`admin888`)
+    打开浏览器,在地址栏里面ctrl+V/⌘+V (初始管理员账号 admin,密码 admin888)
 
 ## Install
 
